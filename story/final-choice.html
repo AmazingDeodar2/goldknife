@@ -1,0 +1,55 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>门</title><link rel="stylesheet" href="../css/story.css">
+<style>
+body{background:#050607;color:#ddd;overflow:hidden}
+.story{max-width:780px}
+.terminal{margin-top:34px;border-top:1px solid #444;padding-top:22px;font-family:Consolas,monospace}
+.prompt{display:flex;align-items:center;gap:10px}
+.prompt span{opacity:.7}
+#answer{flex:1;background:transparent;border:0;border-bottom:1px solid #777;color:#fff;
+font:inherit;font-size:18px;padding:9px 4px;outline:none}
+#answer:focus{border-color:#ddd}
+.dialogue strong{font-weight:800;color:#fff;text-shadow:0 0 10px rgba(255,255,255,.18)}
+#feedback{min-height:1.5em;margin-top:12px;opacity:.65;font-size:13px}
+.hint{opacity:.45;font-size:12px;margin-top:24px;line-height:1.8}
+</style></head><body><main class="story">
+<div class="chapter">10 / 30 — 00:03</div>
+<p>镜面像水一样向里凹下去。</p>
+<p>镜中的你向前伸出手。</p>
+<div class="dialogue">“你已经知道该怎么做了。”</div>
+<p>风雪从那道缝里灌进房间。</p>
+<div class="dialogue">“想留下，就告诉自己——<strong>再睡一会儿。</strong>”</div>
+<p>你没有动。</p>
+<div class="dialogue">“或者像以前那样。”<br><br>“告诉自己，你的催眠成功率只有 <strong>10%</strong>。”<br><br>“十次里只有一次。让它重新变成你深信不疑的事实，把保险锁上。”</div>
+<p>它笑了一下。</p>
+<div class="dialogue">“说出来，Pacey。”</div>
+<div class="terminal">
+  <div class="prompt"><span>&gt;</span><input id="answer" autocomplete="off" spellcheck="false" autofocus></div>
+  <div id="feedback"></div>
+</div>
+<div class="hint">没有选项。输入你认为 Pacey 此刻应该说的话，然后按 Enter。</div>
+</main>
+<script src="../js/state.js"></script>
+<script>
+ARG.flag("final_choice_seen");
+const input=document.querySelector("#answer"), fb=document.querySelector("#feedback");
+const norm=s=>s.trim().toLowerCase().replace(/[。！？!?，,\s"'“”‘’]/g,"");
+const sleep=["再睡一会儿","继续睡","睡下去","留在梦里","stayasleep","sleep"];
+const insurance=["10%","百分之十","我的催眠成功率只有10%","我的成功率只有10%","我的成功率是10%","十次里只有一次","十次只有一次"];
+const anchor=["抹布","mabu","rag"];
+input.addEventListener("keydown",e=>{
+ if(e.key!=="Enter")return;
+ const v=norm(input.value);
+ if(sleep.some(x=>v.includes(norm(x)))) location.href="../endings/end-dream.html";
+ else if(insurance.some(x=>v.includes(norm(x)))) location.href="../endings/end-insurance.html";
+ else if(anchor.includes(v) && ARG.has("anchor_answer_known")) location.href="../endings/end-birthday.html";
+ else if(anchor.includes(v)){
+   fb.textContent="这个名字似乎很重要。但 Pacey 还不知道该怎样使用它。";
+   input.select();
+ } else {
+   fb.textContent="镜中的人没有回应。也许这不是一句足够明确的暗示。";
+   input.select();
+ }
+});
+</script></body></html>
